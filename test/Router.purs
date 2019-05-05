@@ -5,6 +5,7 @@ module Test.Router
 import Prelude
 
 import Action as Action
+import Bouzuya.DateTime.Formatter.DateTime as DateTimeFormatter
 import Data.Array as Array
 import Data.Either as Either
 import Data.Maybe (Maybe)
@@ -19,6 +20,7 @@ import Simple.JSON as SimpleJSON
 import Test.Unit (TestSuite)
 import Test.Unit as TestUnit
 import Test.Unit.Assert as Assert
+import Type as Type
 
 tests :: TestSuite
 tests = TestUnit.suite "Router" do
@@ -38,6 +40,53 @@ tests = TestUnit.suite "Router" do
         query = Object.empty
       in
         { body, headers, method, path, query }
+
+  TestUnit.test "GET /messages" do
+    Assert.equal
+      (Either.Right Action.MessageIndex)
+      (Router.router (request "GET" "/messages" Maybe.Nothing))
+
+  TestUnit.test "POST /messages" do
+    let
+      dt =
+        Unsafe.unsafePartial
+          (Maybe.fromJust (DateTimeFormatter.fromString "2019-01-02T03:04:05"))
+      message1 =
+        { created_at: Type.Timestamp dt
+        , id: "1"
+        , message: "Hello"
+        , user_id: "1"
+        }
+      body1 = SimpleJSON.writeJSON message1
+    Assert.equal
+      (Either.Right (Action.MessageCreate message1))
+      (Router.router (request "POST" "/messages" (Maybe.Just body1)))
+
+  TestUnit.test "GET /messages/{id}" do
+    Assert.equal
+      (Either.Right (Action.MessageShow "abc"))
+      (Router.router (request "GET" "/messages/abc" Maybe.Nothing))
+
+  TestUnit.test "PATCH /messages/{id}" do
+    let
+      dt =
+        Unsafe.unsafePartial
+          (Maybe.fromJust (DateTimeFormatter.fromString "2019-01-02T03:04:05"))
+      message1 =
+        { created_at: Type.Timestamp dt
+        , id: "1"
+        , message: "Hello"
+        , user_id: "1"
+        }
+      body1 = SimpleJSON.writeJSON message1
+    Assert.equal
+      (Either.Left Router.NotFound)
+      (Router.router (request "PATCH" "/messages/abc" (Maybe.Just body1)))
+
+  TestUnit.test "DELETE /messages/{id}" do
+    Assert.equal
+      (Either.Right (Action.MessageDestroy "abc"))
+      (Router.router (request "DELETE" "/messages/abc" Maybe.Nothing))
 
   TestUnit.test "GET /users" do
     Assert.equal

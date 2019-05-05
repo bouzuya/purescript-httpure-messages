@@ -31,15 +31,33 @@ fromJSON s =
     (SimpleJSON.readJSON s)
 
 router :: HTTPure.Request -> Either RouteError Action
-router = case _ of
-  { method: HTTPure.Get, path: ["users"] } -> pure UserIndex
-  { method: HTTPure.Post, path: ["users"], body } -> do
-    user <- fromJSON body
-    pure (UserCreate user)
-  { method: HTTPure.Get, path: ["users", id] } -> pure (UserShow id)
-  { method: HTTPure.Patch, path: ["users", id], body } -> do
-    user <- fromJSON body
-    pure (UserUpdate id user)
-  { method: HTTPure.Delete, path: ["users", id] } ->
-    pure (UserDestroy id)
-  _ -> Either.Left NotFound
+router request =
+  case request.path of
+    ["messages"] ->
+      case request.method of
+        HTTPure.Get -> pure MessageIndex
+        HTTPure.Post -> do
+          message <- fromJSON request.body
+          pure (MessageCreate message)
+        _ -> Either.Left NotFound -- TODO: 405
+    ["messages", id] ->
+      case request.method of
+        HTTPure.Get -> pure (MessageShow id)
+        HTTPure.Delete -> pure (MessageDestroy id)
+        _ -> Either.Left NotFound -- TODO: 405
+    ["users"] ->
+      case request.method of
+        HTTPure.Get -> pure UserIndex
+        HTTPure.Post -> do
+          user <- fromJSON request.body
+          pure (UserCreate user)
+        _ -> Either.Left NotFound -- TODO: 405
+    ["users", id] ->
+      case request.method of
+        HTTPure.Get -> pure (UserShow id)
+        HTTPure.Patch -> do
+          user <- fromJSON request.body
+          pure (UserUpdate id user)
+        HTTPure.Delete -> pure (UserDestroy id)
+        _ -> Either.Left NotFound -- TODO: 405
+    _ -> Either.Left NotFound
