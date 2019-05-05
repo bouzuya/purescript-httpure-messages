@@ -1,11 +1,16 @@
 module Action
   ( Action(..)
+  , MessageId
   , UserId
   , execute
   ) where
 
 import Prelude
 
+import Action.MessageCreate as ActionMessageCreate
+import Action.MessageDestroy as ActionMessageDestroy
+import Action.MessageIndex as ActionMessageIndex
+import Action.MessageShow as ActionMessageShow
 import Action.UserCreate as ActionUserCreate
 import Action.UserDestroy as ActionUserDestroy
 import Action.UserIndex as ActionUserIndex
@@ -14,12 +19,17 @@ import Action.UserUpdate as ActionUserUpdate
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Show (genericShow)
 import HTTPure (ResponseM)
-import Type (DB, User)
+import Type (DB, User, Message)
 
+type MessageId = String
 type UserId = String
 
 data Action
-  = UserIndex
+  = MessageIndex
+  | MessageCreate Message
+  | MessageShow MessageId
+  | MessageDestroy MessageId
+  | UserIndex
   | UserCreate User
   | UserShow UserId
   | UserUpdate UserId User
@@ -33,6 +43,10 @@ instance showAction :: Show Action where
 execute :: DB -> Action -> ResponseM
 execute db =
   case _ of
+    MessageIndex -> ActionMessageIndex.execute db
+    MessageCreate message -> ActionMessageCreate.execute db message
+    MessageShow id -> ActionMessageShow.execute db id
+    MessageDestroy id -> ActionMessageDestroy.execute db id
     UserIndex -> ActionUserIndex.execute db
     UserCreate user -> ActionUserCreate.execute db user
     UserShow id -> ActionUserShow.execute db id
