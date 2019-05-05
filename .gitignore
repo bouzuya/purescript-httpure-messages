@@ -1,0 +1,8 @@
+/*.sqlite
+/*.tgz
+/.psc*
+/.purs*
+/.spago
+/generated-docs/
+/node_modules/
+/output/

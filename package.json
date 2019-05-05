@@ -1,0 +1,31 @@
+{
+  "name": "purescript-httpure-messages",
+  "description": "HTTPure example.",
+  "version": "0.0.0",
+  "author": "bouzuya <m@bouzuya.net> (https://bouzuya.net/)",
+  "bugs": {
+    "url": "https://github.com/bouzuya/purescript-httpure-messages/issues"
+  },
+  "devDependencies": {
+    "purescript": "^0.12.5",
+    "spago": "^0.7.5"
+  },
+  "homepage": "https://github.com/bouzuya/purescript-httpure-messages#readme",
+  "keywords": [],
+  "license": "MIT",
+  "main": "index.js",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bouzuya/purescript-httpure-messages.git"
+  },
+  "scripts": {
+    "build": "spago build",
+    "spago": "spago",
+    "start": "spago run",
+    "test": "spago test"
+  },
+  "dependencies": {
+    "sqlite3": "^4.0.6"
+  }
+}
