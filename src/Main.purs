@@ -19,6 +19,7 @@ import Foreign as Foreign
 import HTTPure (Request, ResponseM)
 import HTTPure as HTTPure
 import Partial.Unsafe as Unsafe
+import Query as Query
 import Router as Router
 import SQLite3 as SQLite3
 import Type (DB, Message, Timestamp(..), User)
@@ -123,37 +124,11 @@ main = Aff.launchAff_ do
 
     insertMessageQuery :: String
     insertMessageQuery =
-      String.joinWith
-        "\n"
-        [ "INSERT OR IGNORE INTO messages"
-        , "  ( created_at"
-        , "  , id"
-        , "  , message"
-        , "  , user_id"
-        , "  )"
-        , "  VALUES"
-        , "  ( ?"
-        , "  , ?"
-        , "  , ?"
-        , "  , ?"
-        , "  )"
-        ]
+      Query.insert "messages" ["created_at", "id", "message", "user_id"]
 
     insertUserQuery :: String
     insertUserQuery =
-      String.joinWith
-        "\n"
-        [ "INSERT OR IGNORE INTO users"
-        , "  ( id"
-        , "  , name"
-        , "  , url"
-        , "  )"
-        , "  VALUES"
-        , "  ( ?"
-        , "  , ?"
-        , "  , ?"
-        , "  )"
-        ]
+      Query.insert "users" ["id", "name", "url"]
 
     db :: String
     db = "./main.sqlite"
