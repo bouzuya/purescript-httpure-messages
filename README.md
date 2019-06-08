@@ -56,7 +56,7 @@ $ curl http://localhost:8080/messages | jq .
 ### create an user and get an user
 
 ```
-$ curl -X 'POST' -d '{"url":"https://example.com","id":"","name":"foo"}' http://localhost:8080/users
+$ curl -X 'POST' -d '{"url":"https://example.com","name":"foo"}' http://localhost:8080/users
 {"url":"https://example.com","name":"foo","id":"17479676-479e-46f9-8263-29b97a4cdff4"}
 
 $ curl -s http://localhost:8080/users/17479676-479e-46f9-8263-29b97a4cdff4 | jq .

@@ -19,7 +19,7 @@ import Action.UserUpdate as ActionUserUpdate
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Show (genericShow)
 import HTTPure (ResponseM)
-import Type (DB, User, MessageCreateParams)
+import Type (DB, MessageCreateParams, UserParams)
 
 type MessageId = String
 type UserId = String
@@ -30,9 +30,9 @@ data Action
   | MessageShow MessageId
   | MessageDestroy MessageId
   | UserIndex
-  | UserCreate User
+  | UserCreate UserParams
   | UserShow UserId
-  | UserUpdate UserId User
+  | UserUpdate UserId UserParams
   | UserDestroy UserId
 
 derive instance eqAction :: Eq Action

@@ -4,6 +4,7 @@ module Type
   , MessageCreateParams
   , Timestamp(..)
   , User
+  , UserParams
   , timestampToString
   ) where
 
@@ -50,6 +51,11 @@ type MessageCreateParams =
 type User =
   { id :: String
   , name :: String
+  , url :: String
+  }
+
+type UserParams =
+  { name :: String
   , url :: String
   }
 

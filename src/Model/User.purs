@@ -19,9 +19,10 @@ import Effect.Class as Class
 import Foreign as Foreign
 import Prelude as Prelude
 import Query as Query
+import Record as Record
 import SQLite3 as SQLite3
 import Simple.JSON as SimpleJSON
-import Type (DB, User)
+import Type (DB, User, UserParams)
 
 delete :: DB -> String -> Aff Unit
 delete db id = do
@@ -72,8 +73,8 @@ insert db user = do
   where
     query = Query.insert "users" ["id", "name", "url"]
 
-update' :: DB -> String -> User -> Aff Unit
-update' db id user = do
+update' :: DB -> String -> UserParams -> Aff Unit
+update' db id params = do
   conn <- SQLite3.newDB db
   _ <-
     SQLite3.queryDB
@@ -81,9 +82,9 @@ update' db id user = do
       query
       (map
         Foreign.unsafeToForeign
-        [ user.name
-        , user.url
-        , user.id
+        [ params.name
+        , params.url
+        , id
         ])
   SQLite3.closeDB conn
   where
@@ -97,10 +98,10 @@ index db = findAll db
 show :: DB -> String -> Aff (Maybe User)
 show db id = find db id
 
-create :: DB -> User -> Aff (Maybe User)
-create db user = do
+create :: DB -> UserParams -> Aff (Maybe User)
+create db params = do
   id <- Class.liftEffect (map UUIDv4.toString UUIDv4.generate)
-  let user' = user { id = id }
+  let user' = Record.merge params { id }
   userMaybe <- find db id
   case userMaybe of
     Maybe.Just _ -> pure Maybe.Nothing
@@ -108,10 +109,11 @@ create db user = do
       _ <- insert db user'
       pure (Maybe.Just user') -- TODO
 
-update :: DB -> String -> User -> Aff (Maybe User)
-update db id user = do
-  _ <- update' db id user
-  pure (Maybe.Just user) -- TODO
+update :: DB -> String -> UserParams -> Aff (Maybe User)
+update db id params = do
+  _ <- update' db id params
+  userMaybe <- find db id -- TODO
+  pure userMaybe
 
 destroy :: DB -> String -> Aff Boolean
 destroy db id = do

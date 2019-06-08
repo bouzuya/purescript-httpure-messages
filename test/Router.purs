@@ -83,7 +83,7 @@ tests = TestUnit.suite "Router" do
 
   TestUnit.test "POST /users" do
     let
-      user1 = { id: "1", url: "http://example.com", name: "foo" }
+      user1 = { url: "http://example.com", name: "foo" }
       body1 = SimpleJSON.writeJSON user1
     Assert.equal
       (Either.Right (Action.UserCreate user1))
@@ -96,7 +96,7 @@ tests = TestUnit.suite "Router" do
 
   TestUnit.test "PATCH /users/{id}" do
     let
-      user1 = { id: "abc", url: "http://example.com", name: "foo" }
+      user1 = { url: "http://example.com", name: "foo" }
       body1 = SimpleJSON.writeJSON user1
     Assert.equal
       (Either.Right (Action.UserUpdate "abc" user1))
