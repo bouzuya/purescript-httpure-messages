@@ -119,11 +119,11 @@ main = Aff.launchAff_ do
 
     insertMessageQuery :: String
     insertMessageQuery =
-      Query.insert "messages" ["created_at", "id", "message", "user_id"]
+      Query.insertOrIgnore "messages" ["created_at", "id", "message", "user_id"]
 
     insertUserQuery :: String
     insertUserQuery =
-      Query.insert "users" ["id", "name", "url"]
+      Query.insertOrIgnore "users" ["id", "name", "url"]
 
     db :: String
     db = "./main.sqlite"
