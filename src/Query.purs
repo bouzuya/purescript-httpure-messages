@@ -1,7 +1,7 @@
 module Query
   ( columnDef
   , createTable
-  , insert
+  , insertOrIgnore
   ) where
 
 import Prelude
@@ -31,11 +31,11 @@ createTable tableName columnDefs =
     , "  )"
     ]
 
-insert :: String -> Array String -> String
-insert tableName columnNames =
+insertOrIgnore :: String -> Array String -> String
+insertOrIgnore tableName columnNames =
   String.joinWith
     "\n"
-    [ ("INSERT OR IGNORE INTO " <> tableName)
+    [ "INSERT OR IGNORE INTO " <> tableName
     , "  ( " <> (String.joinWith "\n  , " columnNames)
     , "  )"
     , "  VALUES"

@@ -29,7 +29,7 @@ tests = TestUnit.suite "Query" do
         , Query.columnDef "url" "TEXT" ["NOT NULL"]
         ])
 
-  TestUnit.test "insert" do
+  TestUnit.test "insertOrIgnore" do
     Assert.equal
       (String.joinWith
         "\n"
@@ -44,4 +44,4 @@ tests = TestUnit.suite "Query" do
         , "  , ?"
         , "  )"
         ])
-      (Query.insert "users" ["id", "name", "url"])
+      (Query.insertOrIgnore "users" ["id", "name", "url"])
