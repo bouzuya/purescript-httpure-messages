@@ -100,12 +100,13 @@ show db id = find db id
 create :: DB -> User -> Aff (Maybe User)
 create db user = do
   id <- Class.liftEffect (map UUIDv4.toString UUIDv4.generate)
+  let user' = user { id = id }
   userMaybe <- find db id
   case userMaybe of
     Maybe.Just _ -> pure Maybe.Nothing
     Maybe.Nothing -> do
-      _ <- insert db (user { id = id })
-      pure (Maybe.Just user) -- TODO
+      _ <- insert db user'
+      pure (Maybe.Just user') -- TODO
 
 update :: DB -> String -> User -> Aff (Maybe User)
 update db id user = do

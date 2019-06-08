@@ -124,12 +124,13 @@ show db id = find db id
 create :: DB -> Message -> Aff (Maybe Message)
 create db message = do
   id <- Class.liftEffect (map UUIDv4.toString UUIDv4.generate)
+  let message' = message { id = id }
   messageMaybe <- find db id
   case messageMaybe of
     Maybe.Just _ -> pure Maybe.Nothing
     Maybe.Nothing -> do
-      _ <- insert db (message { id = id })
-      pure (Maybe.Just message) -- TODO
+      _ <- insert db message'
+      pure (Maybe.Just message') -- TODO
 
 destroy :: DB -> String -> Aff Boolean
 destroy db id = do
