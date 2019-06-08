@@ -11,7 +11,6 @@ import Data.Array as Array
 import Data.Either as Either
 import Data.Maybe (Maybe)
 import Data.Maybe as Maybe
-import Data.String as String
 import Effect.Aff (Aff)
 import Effect.Aff as Aff
 import Foreign as Foreign
@@ -28,15 +27,7 @@ delete db id = do
   _ <- SQLite3.queryDB conn query (map Foreign.unsafeToForeign [id])
   SQLite3.closeDB conn
   where
-    query =
-      String.joinWith
-        "\n"
-        [ "DELETE"
-        , "  FROM"
-        , "    messages"
-        , "  WHERE"
-        , "    id = ?"
-        ]
+    query = Query.delete "messages" "id = ?"
 
 findAll :: DB -> Aff (Array Message)
 findAll db = do
