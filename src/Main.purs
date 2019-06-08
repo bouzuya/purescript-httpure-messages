@@ -8,7 +8,6 @@ import Action as Action
 import Bouzuya.DateTime.Formatter.DateTime as DateTimeFormatter
 import Data.Either as Either
 import Data.Maybe as Maybe
-import Data.String as String
 import Data.Traversable as Traversable
 import Effect (Effect)
 import Effect.Aff (Aff)
@@ -101,25 +100,21 @@ main = Aff.launchAff_ do
 
     createMessageTableQuery :: String
     createMessageTableQuery =
-      String.joinWith
-        "\n"
-        [ "CREATE TABLE IF NOT EXISTS messages"
-        , "  ( created_at TEXT NOT NULL"
-        , "  , id TEXT PRIMARY KEY"
-        , "  , message TEXT NOT NULL"
-        , "  , user_id TEXT NOT NULL"
-        , "  )"
+      Query.createTable
+        "messages"
+        [ Query.columnDef "created_at" "TEXT" ["NOT NULL"]
+        , Query.columnDef "id" "TEXT" ["PRIMARY KEY"]
+        , Query.columnDef "message" "TEXT" ["NOT NULL"]
+        , Query.columnDef "user_id" "TEXT" ["NOT NULL"]
         ]
 
     createUserTableQuery :: String
     createUserTableQuery =
-      String.joinWith
-        "\n"
-        [ "CREATE TABLE IF NOT EXISTS users"
-        , "  ( id TEXT PRIMARY KEY"
-        , "  , name TEXT NOT NULL UNIQUE"
-        , "  , url TEXT NOT NULL"
-        , "  )"
+      Query.createTable
+        "users"
+        [ Query.columnDef "id" "TEXT" ["PRIMARY KEY"]
+        , Query.columnDef "name" "TEXT" ["NOT NULL", "UNIQUE"]
+        , Query.columnDef "url" "TEXT" ["NOT NULL"]
         ]
 
     insertMessageQuery :: String
