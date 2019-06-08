@@ -3,6 +3,7 @@ module Query
   , createTable
   , insert
   , insertOrIgnore
+  , update
   ) where
 
 import Prelude
@@ -32,7 +33,7 @@ createTable tableName columnDefs =
     , "  )"
     ]
 
-insert :: String -> Array String -> String
+insert :: TableName -> Array ColumnName -> String
 insert tableName columnNames =
   String.joinWith
     "\n"
@@ -44,7 +45,7 @@ insert tableName columnNames =
     , "  )"
     ]
 
-insertOrIgnore :: String -> Array String -> String
+insertOrIgnore :: TableName -> Array ColumnName -> String
 insertOrIgnore tableName columnNames =
   String.joinWith
     "\n"
@@ -54,6 +55,15 @@ insertOrIgnore tableName columnNames =
     , "  VALUES"
     , "  ( " <> (String.joinWith "\n  , " (map (const "?") columnNames))
     , "  )"
+    ]
+
+update :: TableName -> Array ColumnName -> String -> String
+update tableName columnNames condition =
+  String.joinWith
+    "\n"
+    [ "UPDATE " <> tableName
+    , "   SET " <> (String.joinWith "\n     , " (map (_ <> " = ?") columnNames))
+    , " WHERE " <> condition
     ]
 
 -- private

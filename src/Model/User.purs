@@ -114,17 +114,7 @@ update' db id user = do
         ])
   SQLite3.closeDB conn
   where
-    query =
-      String.joinWith
-        "\n"
-        [ "UPDATE"
-        , "  users"
-        , "  SET"
-        , "    name = ?"
-        , "  , url = ?"
-        , "  WHERE"
-        , "    id = ?"
-        ]
+    query = Query.update "users" ["name", "url"] "id = ?"
 
 --
 
