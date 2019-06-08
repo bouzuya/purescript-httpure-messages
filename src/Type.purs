@@ -2,9 +2,10 @@ module Type
   ( DB
   , Message
   , MessageParams
-  , Timestamp(..)
+  , Timestamp
   , User
   , UserParams
+  , timestampFromDateTime
   , timestampToString
   ) where
 
@@ -58,6 +59,9 @@ type UserParams =
   { name :: String
   , url :: String
   }
+
+timestampFromDateTime :: DateTime -> Timestamp
+timestampFromDateTime = Timestamp
 
 timestampToString :: Timestamp -> String
 timestampToString (Timestamp dt) = DateTimeFormatter.toString dt

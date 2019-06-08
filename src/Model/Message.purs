@@ -126,7 +126,8 @@ show db id = find db id
 create :: DB -> MessageParams -> Aff (Maybe Message)
 create db params = do
   id <- Class.liftEffect (map UUIDv4.toString UUIDv4.generate)
-  created_at <- Class.liftEffect (map Timestamp Now.nowDateTime)
+  created_at <-
+    Class.liftEffect (map Type.timestampFromDateTime Now.nowDateTime)
   -- TODO: check user_id
   let message' = Record.merge params { created_at, id }
   messageMaybe <- find db id
