@@ -21,7 +21,6 @@ import Simple.JSON as SimpleJSON
 import Test.Unit (TestSuite)
 import Test.Unit as TestUnit
 import Test.Unit.Assert as Assert
-import Type as Type
 
 tests :: TestSuite
 tests = TestUnit.suite "Router" do
@@ -68,20 +67,9 @@ tests = TestUnit.suite "Router" do
       (Router.router (request "GET" "/messages/abc" Maybe.Nothing))
 
   TestUnit.test "PATCH /messages/{id}" do
-    let
-      dt =
-        Unsafe.unsafePartial
-          (Maybe.fromJust (DateTimeFormatter.fromString "2019-01-02T03:04:05"))
-      message1 =
-        { created_at: Type.Timestamp dt
-        , id: "1"
-        , message: "Hello"
-        , user_id: "1"
-        }
-      body1 = SimpleJSON.writeJSON message1
     Assert.equal
-      (Either.Left Router.NotFound)
-      (Router.router (request "PATCH" "/messages/abc" (Maybe.Just body1)))
+      (Either.Left (Router.MethodNotAllowed [HTTPure.Get, HTTPure.Delete]))
+      (Router.router (request "PATCH" "/messages/abc" (Maybe.Just "")))
 
   TestUnit.test "DELETE /messages/{id}" do
     Assert.equal
