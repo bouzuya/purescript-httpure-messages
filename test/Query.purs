@@ -73,6 +73,18 @@ tests = TestUnit.suite "Query" do
         ])
       (Query.insertOrIgnore "users" ["id", "name", "url"])
 
+  TestUnit.test "selectSimple" do
+    Assert.equal
+      (String.joinWith
+        "\n"
+        [ "SELECT id"
+        , "     , name"
+        , "     , url"
+        , "  FROM users"
+        , " WHERE id = ?"
+        ])
+      (Query.selectSimple ["id", "name", "url"] "users" "id = ?")
+
   TestUnit.test "update" do
     Assert.equal
       (String.joinWith

@@ -46,16 +46,14 @@ findAll db = do
   Either.either (\e -> Aff.throwError (Aff.error (Prelude.show e))) pure rows
   where
     query =
-      String.joinWith
-        "\n"
-        [ "SELECT"
-        , "    created_at"
-        , "  , id"
-        , "  , message"
-        , "  , user_id"
-        , "  FROM"
-        , "    messages"
+      Query.selectSimple
+        [ "created_at"
+        , "id"
+        , "message"
+        , "user_id"
         ]
+        "messages"
+        "1 = 1"
 
 find :: DB -> String -> Aff (Maybe Message)
 find db id = do
@@ -71,18 +69,14 @@ find db id = do
     rows
   where
     query =
-      String.joinWith
-        "\n"
-        [ "SELECT"
-        , "    created_at"
-        , "  , id"
-        , "  , message"
-        , "  , user_id"
-        , "  FROM"
-        , "    messages"
-        , "  WHERE"
-        , "    id = ?"
+      Query.selectSimple
+        [ "created_at"
+        , "id"
+        , "message"
+        , "user_id"
         ]
+        "messages"
+        "id = ?"
 
 findByUser :: DB -> String -> Aff (Maybe Message)
 findByUser db id = do
@@ -98,18 +92,14 @@ findByUser db id = do
     rows
   where
     query =
-      String.joinWith
-        "\n"
-        [ "SELECT"
-        , "    created_at"
-        , "  , id"
-        , "  , message"
-        , "  , user_id"
-        , "  FROM"
-        , "    messages"
-        , "  WHERE"
-        , "    user_id = ?"
+      Query.selectSimple
+        [ "created_at"
+        , "id"
+        , "message"
+        , "user_id"
         ]
+        "messages"
+        "user_id = ?"
 
 insert :: DB -> Message -> Aff Unit
 insert db message = do

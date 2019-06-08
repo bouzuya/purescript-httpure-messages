@@ -12,7 +12,6 @@ import Data.Array as Array
 import Data.Either as Either
 import Data.Maybe (Maybe)
 import Data.Maybe as Maybe
-import Data.String as String
 import Effect.Aff (Aff)
 import Effect.Aff as Aff
 import Foreign as Foreign
@@ -37,16 +36,7 @@ findAll db = do
   _ <- SQLite3.closeDB conn
   Either.either (\e -> Aff.throwError (Aff.error (Prelude.show e))) pure rows
   where
-    query =
-      String.joinWith
-        "\n"
-        [ "SELECT"
-        , "    id"
-        , "  , name"
-        , "  , url"
-        , "  FROM"
-        , "    users"
-        ]
+    query = Query.selectSimple ["id", "name", "url"] "uesrs" "1 = 1"
 
 find :: DB -> String -> Aff (Maybe User)
 find db id = do
@@ -61,18 +51,7 @@ find db id = do
     (pure <<< Array.head)
     rows
   where
-    query =
-      String.joinWith
-        "\n"
-        [ "SELECT"
-        , "    id"
-        , "  , name"
-        , "  , url"
-        , "  FROM"
-        , "    users"
-        , "  WHERE"
-        , "    id = ?"
-        ]
+    query = Query.selectSimple ["id", "name", "url"] "users" "id = ?"
 
 insert :: DB -> User -> Aff Unit
 insert db user = do

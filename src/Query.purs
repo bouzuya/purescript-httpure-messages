@@ -4,6 +4,7 @@ module Query
   , delete
   , insert
   , insertOrIgnore
+  , selectSimple
   , update
   ) where
 
@@ -65,6 +66,15 @@ insertOrIgnore tableName columnNames =
     , "  VALUES"
     , "  ( " <> (String.joinWith "\n  , " (map (const "?") columnNames))
     , "  )"
+    ]
+
+selectSimple :: Array ColumnName -> TableName -> String -> String
+selectSimple columnNames tableName condition =
+  String.joinWith
+    "\n"
+    [ "SELECT " <> (String.joinWith "\n     , " columnNames)
+    , "  FROM " <> tableName
+    , " WHERE " <> condition
     ]
 
 update :: TableName -> Array ColumnName -> String -> String
