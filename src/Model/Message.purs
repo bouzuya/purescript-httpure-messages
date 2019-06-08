@@ -22,7 +22,7 @@ import Query as Query
 import Record as Record
 import SQLite3 as SQLite3
 import Simple.JSON as SimpleJSON
-import Type (DB, Message, Timestamp(..), MessageCreateParams)
+import Type (DB, Message, Timestamp(..), MessageParams)
 import Type as Type
 
 delete :: DB -> String -> Aff Unit
@@ -123,7 +123,7 @@ index db = findAll db
 show :: DB -> String -> Aff (Maybe Message)
 show db id = find db id
 
-create :: DB -> MessageCreateParams -> Aff (Maybe Message)
+create :: DB -> MessageParams -> Aff (Maybe Message)
 create db params = do
   id <- Class.liftEffect (map UUIDv4.toString UUIDv4.generate)
   created_at <- Class.liftEffect (map Timestamp Now.nowDateTime)

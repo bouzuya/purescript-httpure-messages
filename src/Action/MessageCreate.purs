@@ -7,10 +7,10 @@ import Prelude
 import Data.Maybe as Maybe
 import HTTPure as HTTPure
 import Model.Message as MessageModel
-import Type (DB, MessageCreateParams)
+import Type (DB, MessageParams)
 import View.MessageShow as ViewMessageShow
 
-execute :: DB -> MessageCreateParams -> HTTPure.ResponseM
+execute :: DB -> MessageParams -> HTTPure.ResponseM
 execute db params = do
   createdMaybe <- MessageModel.create db params
   case createdMaybe of

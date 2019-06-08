@@ -1,7 +1,7 @@
 module Type
   ( DB
   , Message
-  , MessageCreateParams
+  , MessageParams
   , Timestamp(..)
   , User
   , UserParams
@@ -43,7 +43,7 @@ type Message =
   , user_id :: String
   }
 
-type MessageCreateParams =
+type MessageParams =
   { message :: String
   , user_id :: String
   }
