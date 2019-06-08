@@ -115,7 +115,7 @@ let upstream =
       https://raw.githubusercontent.com/purescript/package-sets/psc-0.13.0-20190607/src/packages.dhall sha256:96b28e434b8a62caea5f10376b4f7dc1736a668592cabe914f117ecf5673c2ff
 
 let bouzuya =
-      https://raw.githubusercontent.com/bouzuya/purescript-bouzuya-packages/20190505/bouzuya.dhall sha256:3dcf7f51156bb3fe6823207723ddc0bea919d8ffee3c99fd77f270f944411990
+      https://raw.githubusercontent.com/bouzuya/purescript-bouzuya-packages/20190602/bouzuya.dhall sha256:99b251499be3b2655821f0140d8c442e55b3930144667b1adaecc94f8ac152a9
 
 let overrides = {=}
 

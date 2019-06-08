@@ -6,6 +6,7 @@ You can edit this file as you like.
     "my-project"
 , dependencies =
     [ "bouzuya-datetime-formatter"
+    , "bouzuya-uuid-v4"
     , "console"
     , "effect"
     , "httpure"
