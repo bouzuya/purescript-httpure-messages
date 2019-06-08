@@ -109,10 +109,10 @@ let additions =
 -}
 
 let mkPackage =
-      https://raw.githubusercontent.com/purescript/package-sets/psc-0.12.5-20190504/src/mkPackage.dhall sha256:0b197efa1d397ace6eb46b243ff2d73a3da5638d8d0ac8473e8e4a8fc528cf57
+      https://raw.githubusercontent.com/purescript/package-sets/psc-0.13.0-20190607/src/mkPackage.dhall sha256:0b197efa1d397ace6eb46b243ff2d73a3da5638d8d0ac8473e8e4a8fc528cf57
 
 let upstream =
-      https://raw.githubusercontent.com/purescript/package-sets/psc-0.12.5-20190504/src/packages.dhall sha256:b0c8ec260863f07103b1982b0bbe90601eb11bd8eee45d5c4fe6d633b1b44bf4
+      https://raw.githubusercontent.com/purescript/package-sets/psc-0.13.0-20190607/src/packages.dhall sha256:96b28e434b8a62caea5f10376b4f7dc1736a668592cabe914f117ecf5673c2ff
 
 let bouzuya =
       https://raw.githubusercontent.com/bouzuya/purescript-bouzuya-packages/20190505/bouzuya.dhall sha256:3dcf7f51156bb3fe6823207723ddc0bea919d8ffee3c99fd77f270f944411990
@@ -122,26 +122,5 @@ let overrides = {=}
 let additions =
           {=}
       //  bouzuya
-      //  { querydsl =
-              mkPackage
-              [ "prelude"
-              , "effect"
-              , "arrays"
-              , "lists"
-              , "record"
-              , "strings"
-              , "tuples"
-              , "typelevel-prelude"
-              , "either"
-              , "transformers"
-              , "node-sqlite3"
-              , "datetime"
-              , "formatters"
-              , "node-buffer"
-              , "nullable"
-              ]
-              "https://github.com/Dretch/purescript-querydsl.git"
-              "v0.7.0"
-          }
 
 in  upstream // overrides // additions
