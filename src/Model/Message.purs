@@ -7,12 +7,14 @@ module Model.Message
 
 import Prelude
 
+import Bouzuya.UUID.V4 as UUIDv4
 import Data.Array as Array
 import Data.Either as Either
 import Data.Maybe (Maybe)
 import Data.Maybe as Maybe
 import Effect.Aff (Aff)
 import Effect.Aff as Aff
+import Effect.Class as Class
 import Foreign as Foreign
 import Prelude as Prelude
 import Query as Query
@@ -121,11 +123,12 @@ show db id = find db id
 
 create :: DB -> Message -> Aff (Maybe Message)
 create db message = do
-  messageMaybe <- find db message.id
+  id <- Class.liftEffect (map UUIDv4.toString UUIDv4.generate)
+  messageMaybe <- find db id
   case messageMaybe of
     Maybe.Just _ -> pure Maybe.Nothing
     Maybe.Nothing -> do
-      _ <- insert db message
+      _ <- insert db (message { id = id })
       pure (Maybe.Just message) -- TODO
 
 destroy :: DB -> String -> Aff Boolean

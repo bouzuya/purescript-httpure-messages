@@ -8,12 +8,14 @@ module Model.User
 
 import Prelude
 
+import Bouzuya.UUID.V4 as UUIDv4
 import Data.Array as Array
 import Data.Either as Either
 import Data.Maybe (Maybe)
 import Data.Maybe as Maybe
 import Effect.Aff (Aff)
 import Effect.Aff as Aff
+import Effect.Class as Class
 import Foreign as Foreign
 import Prelude as Prelude
 import Query as Query
@@ -97,11 +99,12 @@ show db id = find db id
 
 create :: DB -> User -> Aff (Maybe User)
 create db user = do
-  userMaybe <- find db user.id
+  id <- Class.liftEffect (map UUIDv4.toString UUIDv4.generate)
+  userMaybe <- find db id
   case userMaybe of
     Maybe.Just _ -> pure Maybe.Nothing
     Maybe.Nothing -> do
-      _ <- insert db user
+      _ <- insert db (user { id = id })
       pure (Maybe.Just user) -- TODO
 
 update :: DB -> String -> User -> Aff (Maybe User)
