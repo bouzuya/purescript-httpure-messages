@@ -54,9 +54,7 @@ tests = TestUnit.suite "Router" do
         Unsafe.unsafePartial
           (Maybe.fromJust (DateTimeFormatter.fromString "2019-01-02T03:04:05"))
       message1 =
-        { created_at: Type.Timestamp dt
-        , id: "1"
-        , message: "Hello"
+        { message: "Hello"
         , user_id: "1"
         }
       body1 = SimpleJSON.writeJSON message1

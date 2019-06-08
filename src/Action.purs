@@ -19,14 +19,14 @@ import Action.UserUpdate as ActionUserUpdate
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Show (genericShow)
 import HTTPure (ResponseM)
-import Type (DB, User, Message)
+import Type (DB, User, MessageCreateParams)
 
 type MessageId = String
 type UserId = String
 
 data Action
   = MessageIndex
-  | MessageCreate Message
+  | MessageCreate MessageCreateParams
   | MessageShow MessageId
   | MessageDestroy MessageId
   | UserIndex

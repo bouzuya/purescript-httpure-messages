@@ -15,12 +15,14 @@ import Data.Maybe as Maybe
 import Effect.Aff (Aff)
 import Effect.Aff as Aff
 import Effect.Class as Class
+import Effect.Now as Now
 import Foreign as Foreign
 import Prelude as Prelude
 import Query as Query
+import Record as Record
 import SQLite3 as SQLite3
 import Simple.JSON as SimpleJSON
-import Type (DB, Message)
+import Type (DB, Message, Timestamp(..), MessageCreateParams)
 import Type as Type
 
 delete :: DB -> String -> Aff Unit
@@ -121,10 +123,12 @@ index db = findAll db
 show :: DB -> String -> Aff (Maybe Message)
 show db id = find db id
 
-create :: DB -> Message -> Aff (Maybe Message)
-create db message = do
+create :: DB -> MessageCreateParams -> Aff (Maybe Message)
+create db params = do
   id <- Class.liftEffect (map UUIDv4.toString UUIDv4.generate)
-  let message' = message { id = id }
+  created_at <- Class.liftEffect (map Timestamp Now.nowDateTime)
+  -- TODO: check user_id
+  let message' = Record.merge params { created_at, id }
   messageMaybe <- find db id
   case messageMaybe of
     Maybe.Just _ -> pure Maybe.Nothing
