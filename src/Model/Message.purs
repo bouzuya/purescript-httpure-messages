@@ -22,7 +22,7 @@ import Query as Query
 import Record as Record
 import SQLite3 as SQLite3
 import Simple.JSON as SimpleJSON
-import Type (DB, Message, Timestamp(..), MessageParams)
+import Type (DB, Message, MessageParams)
 import Type as Type
 
 delete :: DB -> String -> Aff Unit

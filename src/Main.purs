@@ -22,7 +22,7 @@ import Partial.Unsafe as Unsafe
 import Query as Query
 import Router as Router
 import SQLite3 as SQLite3
-import Type (DB, Message, Timestamp(..), User)
+import Type (DB, Message, User)
 import Type as Type
 
 initialMessages :: Array Message
@@ -33,7 +33,7 @@ initialMessages =
         dt =
           Unsafe.unsafePartial
             (Maybe.fromJust (DateTimeFormatter.fromString created_at))
-      in { created_at: Timestamp dt, id, message, user_id })
+      in { created_at: Type.timestampFromDateTime dt, id, message, user_id })
     [ { created_at: "2019-01-02T03:04:05"
       , id: "1"
       , message: "Hello"
