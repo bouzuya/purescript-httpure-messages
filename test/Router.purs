@@ -14,6 +14,7 @@ import Data.String as String
 import Foreign.Object as Object
 import HTTPure (Request)
 import HTTPure as HTTPure
+import HTTPure.Version as Version
 import Partial.Unsafe as Unsafe
 import Router as Router
 import Simple.JSON as SimpleJSON
@@ -38,8 +39,9 @@ tests = TestUnit.suite "Router" do
           _ -> Unsafe.unsafeCrashWith ("unknown method: " <> s)
         path = Array.drop 1 (String.split (String.Pattern "/") p)
         query = Object.empty
+        httpVersion = Version.HTTP1_1
       in
-        { body, headers, method, path, query }
+        { body, headers, httpVersion, method, path, query }
 
   TestUnit.test "GET /messages" do
     Assert.equal
