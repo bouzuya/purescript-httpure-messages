@@ -16,6 +16,7 @@ import Data.Maybe as Maybe
 import Effect.Aff (Aff)
 import Effect.Aff as Aff
 import Effect.Class as Class
+import Effect.Now as Now
 import Foreign as Foreign
 import Prelude as Prelude
 import Query as Query
@@ -23,6 +24,7 @@ import Record as Record
 import SQLite3 as SQLite3
 import Simple.JSON as SimpleJSON
 import Type (DB, User, UserParams)
+import Type as Type
 
 delete :: DB -> String -> Aff Unit
 delete db id = do
@@ -39,7 +41,8 @@ findAll db = do
   _ <- SQLite3.closeDB conn
   Either.either (\e -> Aff.throwError (Aff.error (Prelude.show e))) pure rows
   where
-    query = Query.selectSimple ["id", "name", "url"] "users" "1 = 1"
+    query =
+      Query.selectSimple ["created_at", "id", "name", "url"] "users" "1 = 1"
 
 find :: DB -> String -> Aff (Maybe User)
 find db id = do
@@ -54,7 +57,8 @@ find db id = do
     (pure <<< Array.head)
     rows
   where
-    query = Query.selectSimple ["id", "name", "url"] "users" "id = ?"
+    query =
+      Query.selectSimple ["created_at", "id", "name", "url"] "users" "id = ?"
 
 insert :: DB -> User -> Aff Unit
 insert db user = do
@@ -65,13 +69,14 @@ insert db user = do
       query
       (map
         Foreign.unsafeToForeign
-        [ user.id
+        [ Type.timestampToString user.created_at
+        , user.id
         , user.name
         , user.url
         ])
   SQLite3.closeDB conn
   where
-    query = Query.insert "users" ["id", "name", "url"]
+    query = Query.insert "users" ["created_at", "id", "name", "url"]
 
 update' :: DB -> String -> UserParams -> Aff Unit
 update' db id params = do
@@ -101,7 +106,9 @@ show db id = find db id
 create :: DB -> UserParams -> Aff (Maybe User)
 create db params = do
   id <- Class.liftEffect (map UUIDv4.toString UUIDv4.generate)
-  let user' = Record.merge params { id }
+  created_at <-
+    Class.liftEffect (map Type.timestampFromDateTime Now.nowDateTime)
+  let user' = Record.merge params { created_at, id }
   userMaybe <- find db id
   case userMaybe of
     Maybe.Just _ -> pure Maybe.Nothing

@@ -5,7 +5,6 @@ module Main
 import Prelude
 
 import Action as Action
-import Bouzuya.DateTime.Formatter.DateTime as DateTimeFormatter
 import Data.Either as Either
 import Data.Maybe as Maybe
 import Data.String as String
@@ -15,47 +14,34 @@ import Effect.Aff (Aff)
 import Effect.Aff as Aff
 import Effect.Class as Class
 import Effect.Console as Console
-import Foreign as Foreign
 import HTTPure (Request, ResponseM)
 import HTTPure as HTTPure
+import Model.Message as ModelMessage
+import Model.User as ModelUser
 import Partial.Unsafe as Unsafe
 import Query as Query
 import Router as Router
 import SQLite3 as SQLite3
-import Type (DB, Message, User)
-import Type as Type
+import Type (DB, UserParams)
 
-initialMessages :: Array Message
+initialMessages :: Array { message :: String, userName :: String }
 initialMessages =
-  map
-    (\{ created_at, id, message, user_id } ->
-      let
-        dt =
-          Unsafe.unsafePartial
-            (Maybe.fromJust (DateTimeFormatter.fromString created_at))
-      in { created_at: Type.timestampFromDateTime dt, id, message, user_id })
-    [ { created_at: "2019-01-02T03:04:05"
-      , id: "1"
-      , message: "Hello"
-      , user_id: "1"
-      }
-    , { created_at: "2019-01-02T03:04:10"
-      , id: "2"
-      , message: "World"
-      , user_id: "1"
-      }
-    , { created_at: "2019-01-02T03:04:20"
-      , id: "3"
-      , message: "World"
-      , user_id: "2"
-      }
-    ]
+  [ { message: "Hello"
+    , userName: "user 1"
+    }
+  , { message: "World"
+    , userName: "user 1"
+    }
+  , { message: "World"
+    , userName: "user 2"
+    }
+  ]
 
-initialUsers :: Array User
+initialUsers :: Array UserParams
 initialUsers =
-  [ { id: "1", url: "https://duckduckgo.com/", name: "search engine" }
-  , { id: "2", url: "https://bouzuya.net/", name: "my page" }
-  , { id: "3", url: "https://blog.bouzuya.net/", name: "my blog" }
+  [ { url: "https://duckduckgo.com/", name: "user 1" }
+  , { url: "https://bouzuya.net/", name: "user 2" }
+  , { url: "https://blog.bouzuya.net/", name: "user 3" }
   ]
 
 main :: Effect Unit
@@ -86,23 +72,16 @@ main = Aff.launchAff_ do
       conn <- SQLite3.newDB dbFile
       _ <- SQLite3.queryDB conn createMessageTableQuery []
       _ <- SQLite3.queryDB conn createUserTableQuery []
-      Traversable.for_ initialUsers \{ id, url, name } -> do
-        SQLite3.queryDB
-          conn
-          insertUserQuery
-          (map
-            Foreign.unsafeToForeign
-            [ id, name, url ])
-      Traversable.for_
-        initialMessages
-        \{ created_at, id, message, user_id } -> do
-        SQLite3.queryDB
-          conn
-          insertMessageQuery
-          (map
-            Foreign.unsafeToForeign
-            [ Type.timestampToString created_at, id, message, user_id ])
-      SQLite3.closeDB conn
+      Traversable.for_ initialUsers \user -> do
+        ModelUser.create dbFile user
+      users <- ModelUser.index dbFile
+      Traversable.for_ initialMessages \{ message, userName } -> do
+        userMaybe <-
+          pure (Traversable.find (\{ name } -> eq name userName) users)
+        case userMaybe of
+          Maybe.Nothing -> Unsafe.unsafeCrashWith "no user"
+          Maybe.Just { id: user_id } ->
+            ModelMessage.create dbFile { user_id, message }
 
     createMessageTableQuery :: String
     createMessageTableQuery =
@@ -118,7 +97,8 @@ main = Aff.launchAff_ do
     createUserTableQuery =
       Query.createTable
         "users"
-        [ Query.columnDef "id" "TEXT" ["PRIMARY KEY"]
+        [ Query.columnDef "created_at" "TEXT" ["NOT NULL"]
+        , Query.columnDef "id" "TEXT" ["PRIMARY KEY"]
         , Query.columnDef "name" "TEXT" ["NOT NULL", "UNIQUE"]
         , Query.columnDef "url" "TEXT" ["NOT NULL"]
         ]

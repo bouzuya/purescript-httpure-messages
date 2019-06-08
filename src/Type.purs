@@ -50,7 +50,8 @@ type MessageParams =
   }
 
 type User =
-  { id :: String
+  { created_at :: Timestamp
+  , id :: String
   , name :: String
   , url :: String
   }
