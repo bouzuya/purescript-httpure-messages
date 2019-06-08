@@ -8,6 +8,7 @@ import Action as Action
 import Bouzuya.DateTime.Formatter.DateTime as DateTimeFormatter
 import Data.Either as Either
 import Data.Maybe as Maybe
+import Data.String as String
 import Data.Traversable as Traversable
 import Effect (Effect)
 import Effect.Aff (Aff)
@@ -71,6 +72,11 @@ main = Aff.launchAff_ do
           HTTPure.badRequest "invalid params"
         Either.Left Router.NotFound ->
           HTTPure.notFound
+        Either.Left (Router.MethodNotAllowed methods) ->
+          HTTPure.methodNotAllowed'
+            (HTTPure.header
+              "Allow"
+              (String.joinWith ", " (map (String.toUpper <<< show) methods)))
 
     booted :: Effect Unit
     booted = Console.log "Server now up on port 8080"

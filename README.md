@@ -61,4 +61,13 @@ $ curl -s http://localhost:8080/users/17479676-479e-46f9-8263-29b97a4cdff4 | jq 
 }
 ```
 
+```
+$ curl -X DELETE -D - http://localhost:8080/users
+HTTP/1.1 405 Method Not Allowed
+Allow: GET, POST
+Content-Length: 0
+Date: Sat, 08 Jun 2019 06:57:45 GMT
+Connection: keep-alive
+```
+
 [bouzuya/w010]: https://github.com/bouzuya/w010
