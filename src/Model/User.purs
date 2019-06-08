@@ -38,7 +38,7 @@ findAll db = do
   _ <- SQLite3.closeDB conn
   Either.either (\e -> Aff.throwError (Aff.error (Prelude.show e))) pure rows
   where
-    query = Query.selectSimple ["id", "name", "url"] "uesrs" "1 = 1"
+    query = Query.selectSimple ["id", "name", "url"] "users" "1 = 1"
 
 find :: DB -> String -> Aff (Maybe User)
 find db id = do
