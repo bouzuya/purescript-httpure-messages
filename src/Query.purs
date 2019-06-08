@@ -1,6 +1,7 @@
 module Query
   ( columnDef
   , createTable
+  , delete
   , insert
   , insertOrIgnore
   , update
@@ -31,6 +32,15 @@ createTable tableName columnDefs =
     [ "CREATE TABLE IF NOT EXISTS " <> tableName
     , "  ( " <> (String.joinWith "\n  , " (map columnDefToString columnDefs))
     , "  )"
+    ]
+
+delete :: TableName -> String -> String
+delete tableName condition =
+  String.joinWith
+    "\n"
+    [ "DELETE"
+    , "  FROM " <> tableName
+    , " WHERE " <> condition
     ]
 
 insert :: TableName -> Array ColumnName -> String

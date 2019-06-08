@@ -28,15 +28,7 @@ delete db id = do
   _ <- SQLite3.queryDB conn query (map Foreign.unsafeToForeign [id])
   SQLite3.closeDB conn
   where
-    query =
-      String.joinWith
-        "\n"
-        [ "DELETE"
-        , "  FROM"
-        , "    users"
-        , "  WHERE"
-        , "    id = ?"
-        ]
+    query = Query.delete "users" "id = ?"
 
 findAll :: DB -> Aff (Array User)
 findAll db = do

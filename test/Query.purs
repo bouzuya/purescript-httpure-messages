@@ -29,6 +29,16 @@ tests = TestUnit.suite "Query" do
         , Query.columnDef "url" "TEXT" ["NOT NULL"]
         ])
 
+  TestUnit.test "delete" do
+    Assert.equal
+      (String.joinWith
+        "\n"
+        [ "DELETE"
+        , "  FROM users"
+        , " WHERE id = ?"
+        ])
+      (Query.delete "users" "id = ?")
+
   TestUnit.test "insert" do
     Assert.equal
       (String.joinWith
