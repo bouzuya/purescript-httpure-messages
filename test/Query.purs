@@ -29,6 +29,23 @@ tests = TestUnit.suite "Query" do
         , Query.columnDef "url" "TEXT" ["NOT NULL"]
         ])
 
+  TestUnit.test "insert" do
+    Assert.equal
+      (String.joinWith
+        "\n"
+        [ "INSERT INTO users"
+        , "  ( id"
+        , "  , name"
+        , "  , url"
+        , "  )"
+        , "  VALUES"
+        , "  ( ?"
+        , "  , ?"
+        , "  , ?"
+        , "  )"
+        ])
+      (Query.insert "users" ["id", "name", "url"])
+
   TestUnit.test "insertOrIgnore" do
     Assert.equal
       (String.joinWith

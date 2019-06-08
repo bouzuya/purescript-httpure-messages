@@ -16,6 +16,7 @@ import Effect.Aff (Aff)
 import Effect.Aff as Aff
 import Foreign as Foreign
 import Prelude as Prelude
+import Query as Query
 import SQLite3 as SQLite3
 import Simple.JSON as SimpleJSON
 import Type (DB, Message)
@@ -127,21 +128,7 @@ insert db message = do
   SQLite3.closeDB conn
   where
     query =
-      String.joinWith
-        "\n"
-        [ "INSERT INTO messages"
-        , "  ( created_at"
-        , "  , id"
-        , "  , message"
-        , "  , user_id"
-        , "  )"
-        , "  VALUES"
-        , "  ( ?"
-        , "  , ?"
-        , "  , ?"
-        , "  , ?"
-        , "  )"
-        ]
+      Query.insert "messages" ["created_at", "id", "message", "user_id"]
 
 --
 

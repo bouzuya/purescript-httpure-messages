@@ -17,6 +17,7 @@ import Effect.Aff (Aff)
 import Effect.Aff as Aff
 import Foreign as Foreign
 import Prelude as Prelude
+import Query as Query
 import SQLite3 as SQLite3
 import Simple.JSON as SimpleJSON
 import Type (DB, User)
@@ -96,20 +97,7 @@ insert db user = do
         ])
   SQLite3.closeDB conn
   where
-    query =
-      String.joinWith
-        "\n"
-        [ "INSERT INTO users"
-        , "  ( id"
-        , "  , name"
-        , "  , url"
-        , "  )"
-        , "  VALUES"
-        , "  ( ?"
-        , "  , ?"
-        , "  , ?"
-        , "  )"
-        ]
+    query = Query.insert "users" ["id", "name", "url"]
 
 update' :: DB -> String -> User -> Aff Unit
 update' db id user = do

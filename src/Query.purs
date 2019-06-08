@@ -1,6 +1,7 @@
 module Query
   ( columnDef
   , createTable
+  , insert
   , insertOrIgnore
   ) where
 
@@ -28,6 +29,18 @@ createTable tableName columnDefs =
     "\n"
     [ "CREATE TABLE IF NOT EXISTS " <> tableName
     , "  ( " <> (String.joinWith "\n  , " (map columnDefToString columnDefs))
+    , "  )"
+    ]
+
+insert :: String -> Array String -> String
+insert tableName columnNames =
+  String.joinWith
+    "\n"
+    [ "INSERT INTO " <> tableName
+    , "  ( " <> (String.joinWith "\n  , " columnNames)
+    , "  )"
+    , "  VALUES"
+    , "  ( " <> (String.joinWith "\n  , " (map (const "?") columnNames))
     , "  )"
     ]
 
